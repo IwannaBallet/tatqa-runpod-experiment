@@ -1,0 +1,741 @@
+[
+  {
+    "table": {
+      "uid": "1a97fb64-4422-45a0-98d0-17b7c7fca065",
+      "table": [
+        [
+          "",
+          "",
+          "Three Months Ended",
+          ""
+        ],
+        [
+          "",
+          "December 31, 2019",
+          "September 29, 2019",
+          "December 31, 2018"
+        ],
+        [
+          "",
+          "",
+          "(Unaudited, in millions)",
+          ""
+        ],
+        [
+          "Income tax expense",
+          "$(62)",
+          "$(28)",
+          "$(28)"
+        ]
+      ]
+    },
+    "paragraphs": [
+      {
+        "uid": "fa0558cb-a40d-4374-af40-02b033fadd00",
+        "order": 1,
+        "text": "During the fourth and third quarters of 2019 and the fourth quarter of 2018, we recorded an income tax expense of $62 million, $28 million and $28 million, respectively, reflecting (i) in the third quarter of 2019 the estimated annual effective tax rate in each of our jurisdictions, applied to the consolidated results before taxes in the third quarter of 2019 and (ii) in both fourth quarters the actual tax charges and benefits in each jurisdiction as well as the true-up of tax provisions based upon the most updated visibility on open tax matters in several jurisdictions. and (ii) in both fourth quarters the actual tax charges and benefits in each jurisdiction as well as the true-up of tax provisions based upon the most updated visibility on open tax matters in several jurisdictions. and (ii) in both fourth quarters the actual tax charges and benefits in each jurisdiction as well as the true-up of tax provisions based upon the most updated visibility on open tax matters in several jurisdictions."
+      },
+      {
+        "uid": "e35c80eb-67c4-4730-b56c-dbb651d70f65",
+        "order": 2,
+        "text": "Income tax expense"
+      }
+    ],
+    "questions": [
+      {
+        "uid": "cc42e86a-c56d-4638-b94c-bf4cc5ebd7c5",
+        "order": 4,
+        "question": "What is the average Income tax expense for the period September 29, and December 31, 2019?",
+        "answer": 45,
+        "derivation": "(62+28) / 2",
+        "answer_type": "arithmetic",
+        "answer_from": "table",
+        "rel_paragraphs": [],
+        "req_comparison": false,
+        "scale": "million"
+      }
+    ]
+  },
+  {
+    "table": {
+      "uid": "8325301e-b5c5-41b2-a9a9-8da0c61c4479",
+      "table": [
+        [
+          "",
+          "January 3, 2020",
+          "December 28, 2018"
+        ],
+        [
+          "",
+          "(in millions)",
+          ""
+        ],
+        [
+          "Computers and other equipment",
+          "$259",
+          "$233"
+        ],
+        [
+          "Leasehold improvements",
+          "203",
+          "206"
+        ],
+        [
+          "Office furniture and fixtures",
+          "37",
+          "36"
+        ],
+        [
+          "Buildings and improvements",
+          "23",
+          "56"
+        ],
+        [
+          "Land",
+          "4",
+          "40"
+        ],
+        [
+          "Construction in progress",
+          "104",
+          "15"
+        ],
+        [
+          "",
+          "630",
+          "586"
+        ],
+        [
+          "Less: accumulated depreciation and amortization",
+          "(343)",
+          "(349)"
+        ],
+        [
+          "",
+          "$ 287",
+          "$ 237"
+        ]
+      ]
+    },
+    "paragraphs": [
+      {
+        "uid": "4a1d331d-b317-4d79-b28b-ef922cef9585",
+        "order": 1,
+        "text": "Note 12—Property, Plant and Equipment"
+      },
+      {
+        "uid": "c4708fa2-52b0-4189-9b45-7f7e2ca694ca",
+        "order": 2,
+        "text": "Property, plant and equipment, net consisted of the following:"
+      },
+      {
+        "uid": "118896a1-c01a-4bd2-b3be-de15cb80962f",
+        "order": 3,
+        "text": "Depreciation expense was $61 million, $56 million and $55 million for fiscal 2019, 2018 and 2017, respectively."
+      }
+    ],
+    "questions": [
+      {
+        "uid": "a9291dec-70db-4a3f-a318-c93dfae61e3b",
+        "order": 5,
+        "question": "What was the change in the Leasehold improvements from 2018 to 2020?",
+        "answer": -3,
+        "derivation": "203 - 206",
+        "answer_type": "arithmetic",
+        "answer_from": "table",
+        "rel_paragraphs": [],
+        "req_comparison": false,
+        "scale": "million"
+      }
+    ]
+  },
+  {
+    "table": {
+      "uid": "b53a1677-afe3-49cb-9878-dc93655eac4f",
+      "table": [
+        [
+          "",
+          "2019",
+          "2018"
+        ],
+        [
+          "",
+          "€m",
+          "€m"
+        ],
+        [
+          "Performance bonds1",
+          "337",
+          "993"
+        ],
+        [
+          "Other guarantees and contingent liabilities2",
+          "2,943",
+          "4,036"
+        ]
+      ]
+    },
+    "paragraphs": [
+      {
+        "uid": "97b2ddf9-3346-43f5-b019-b8fe41fbcedf",
+        "order": 1,
+        "text": "28. Contingent liabilities and legal proceedings"
+      },
+      {
+        "uid": "5c3c4786-a1e1-454c-a7dd-51a5b211e787",
+        "order": 2,
+        "text": "Contingent liabilities are potential future cash outflows, where the likelihood of payment is considered more than remote, but is not considered probable or cannot be measured reliably."
+      },
+      {
+        "uid": "cfec6fb3-061d-459c-8072-ff9be9c1f2b6",
+        "order": 3,
+        "text": "Notes: 1 Performance bonds require the Group to make payments to third parties in the event that the Group does not perform what is expected of it under the terms of any related contracts or commercial arrangements"
+      },
+      {
+        "uid": "73c7f887-4145-427c-a655-054bd2e0ba5c",
+        "order": 4,
+        "text": "2 Other guarantees principally comprise Vodafone Group Plc’s guarantee of the Group’s 50% share of an AUD1.7 billion loan facility and a US$3.5 billion loan facility of its joint venture, Vodafone Hutchison Australia Pty Limited. The Group’s share of these loan balances is included in the net investment in joint venture (see note 12 “Investments in associates and joint arrangements”)."
+      }
+    ],
+    "questions": [
+      {
+        "uid": "92eba69c-0576-4a9c-b258-a13d3a18486c",
+        "order": 5,
+        "question": "What is the 2019 average other guarantees and contingent liabilities?",
+        "answer": 3489.5,
+        "derivation": "(2,943+4,036)/2",
+        "answer_type": "arithmetic",
+        "answer_from": "table",
+        "rel_paragraphs": [],
+        "req_comparison": false,
+        "scale": "million"
+      }
+    ]
+  },
+  {
+    "table": {
+      "uid": "ddc37cd0-abce-4ba4-a847-bb52750315d3",
+      "table": [
+        [
+          "",
+          "Years Ended December 31,",
+          ""
+        ],
+        [
+          "",
+          "2019",
+          "2018"
+        ],
+        [
+          "",
+          "(in thousands)",
+          ""
+        ],
+        [
+          "Net cash provided by operating activities",
+          "$78,348",
+          "$102,689"
+        ],
+        [
+          "Net cash used in investing activities",
+          "(6,973)",
+          "(7,825)"
+        ],
+        [
+          "Net cash used in financing activities",
+          "(53,383)",
+          "(93,784)"
+        ],
+        [
+          "Effect of exchange rate changes on cash, cash equivalents and restricted cash",
+          "934",
+          "(1,301)"
+        ],
+        [
+          "Increase (decrease) in cash, cash equivalents and restricted cash",
+          "$18,926",
+          "(221)"
+        ]
+      ]
+    },
+    "paragraphs": [
+      {
+        "uid": "b6457d52-0550-45b8-9e7d-afb09e370966",
+        "order": 1,
+        "text": "Following is a summary of our cash flows provided by (used in) operating activities, investing activities and financing activities for the years endedD ecember 31, 2019 and 2018. A discussion of cash flows for the year ended December 31, 2017 has been omitted from this Annual Report on Form 10-K, but may be found in “Item 7."
+      },
+      {
+        "uid": "71b1528a-5d38-4fb6-9474-217e90c8651c",
+        "order": 2,
+        "text": "Management’s Discussion and Analysis of Financial Condition and Results of Operations,” under the heading “Liquidity and Capital Resources” in our Annual Report on Form 10-K for the year ended December 31, 2018, filed with the SEC on February 5, 2019, which discussion is incorporated herein by reference and which is available free of charge on the SEC’s website at www.sec.gov."
+      },
+      {
+        "uid": "36b22eaf-5dbc-40a9-be64-acc5b975cc9b",
+        "order": 3,
+        "text": "Cash Flows from Operating Activities"
+      },
+      {
+        "uid": "467fc9fe-8098-4209-8fda-c5a852abe013",
+        "order": 4,
+        "text": "Net cash provided by operating activities was $78.3 million for the year ended December 31, 2019. Net cash provided by operating activities consisted of positive cash flow from operations including $101.1 million in non-cash expenses and $16.9 million in changes in operating assets and liabilities, partially offset by net loss of $19.9 million and deferred income taxes and excess tax benefits from stock-based compensation of $19.8 million."
+      },
+      {
+        "uid": "95d88cd3-d7be-49f6-9b7e-ab3621adec93",
+        "order": 5,
+        "text": "Non-cash items included in net loss for the year ended December 31, 2019 primarily included depreciation and amortization of property, equipment, intangible assets and leased right-of-use assets of $66.4 million and stock-based compensation of $32.1 million."
+      },
+      {
+        "uid": "43bf4467-d312-4cf4-b1f2-154d64ed26ef",
+        "order": 6,
+        "text": "During the year ended December 31, 2019, we also exited certain leased facilities, which resulted in impairment of leased right-of-use assets of$ 9.2 million and leasehold improvements of $1.4 million, which was partially offset by a gain on extinguishment of related lease liabilities of$ 10.4 million, all of which are non-cash items that did not affect cash flows."
+      },
+      {
+        "uid": "cf21065a-1024-4838-bc21-e171159e3b76",
+        "order": 7,
+        "text": "Net cash provided by operating activities was $102.7 million for the year ended December 31, 2018. Net cash provided by operating activities consisted of positive cash flow from operations including $100.3 million in non-cash operating expenses and $28.6 million in changes in operating assets and liabilities, partially offset by net loss of $26.2 million."
+      },
+      {
+        "uid": "a6f01868-9be2-485e-b578-c8505effdd3e",
+        "order": 8,
+        "text": "Non-cash items included in net loss for the year ended December 31, 2018 primarily included depreciation and amortization of property, equipment and intangible assets of $79.0 million, stock-based compensation of $31.7 million, and impairment of intangible assets of $2.2 million, partially offset by deferred income taxes of $12.1 million and excess tax benefits on stock-based awards of $2.0 million."
+      },
+      {
+        "uid": "744290a1-6551-484c-9526-9eb8e4472439",
+        "order": 9,
+        "text": "Cash Flows from Investing Activities"
+      },
+      {
+        "uid": "f7df2ebc-1bd6-44f7-86f3-efa1ba00d164",
+        "order": 10,
+        "text": "Net cash used in investing activities was $7.0 million for the year ended December 31, 2019. Net cash used in investing activities primarily consisted of $6.9 million in purchases of property and equipment. Net cash used in investing activities was $7.8 million for the year ended December 31, 2018. Net cash used in investing activities consisted entirely of $7.8 million in purchases of property and equipment."
+      },
+      {
+        "uid": "788d5ca2-99da-4ed9-8f36-6be23723471b",
+        "order": 11,
+        "text": "Cash Flows from Financing Activities"
+      },
+      {
+        "uid": "d8afca7b-fc44-44e6-97c4-e328f2932bbd",
+        "order": 12,
+        "text": "Net cash used in financing activities was $53.4 million for the year ended December 31, 2019. Net cash used in financing activities consisted primarily of cash outflows from aggregate prepayments of principal of $50.0 million and $12.0 million in minimum tax withholding paid on behalf of employees for restricted stock units, partially offset by cash inflows of $8.6 million in net proceeds from issuance of common stock upon exercise of stock options."
+      },
+      {
+        "uid": "a81ea6f5-0192-4198-8e4a-c24cdba3ea58",
+        "order": 13,
+        "text": "Net cash used in financing activities was $93.8 million for the year ended December 31, 2018. Net cash used in financing activities primarily consisted of cash outflows from $93.0 million in aggregate prepayments of principal on outstanding debt and $7.6 million in minimum tax withholding paid on behalf of employees for restricted stock units, partially offset by cash inflows of $6.8 million in net proceeds from issuance of common stock upon exercise of stock options."
+      },
+      {
+        "uid": "e32b7fec-71e0-41a8-9132-9408a1af36d5",
+        "order": 14,
+        "text": "We believe that our $92.7 million of cash and cash equivalents at December 31, 2019 will be sufficient to fund our projected operating requirements for at least the next twelve months. We have repaid $213.0 million of debt to date. The credit agreement permits the Company to request incremental loans in an aggregate principal amount not to exceed the sum of $160.0 million (subject to adjustments for any voluntary prepayments), plus an unlimited amount that is subject to pro forma compliance with certain secured leverage ratio and total leverage ratio tests."
+      },
+      {
+        "uid": "73f56191-d317-4b0f-93b6-b1828da911ff",
+        "order": 15,
+        "text": "Incremental loans are subject to certain additional conditions, including obtaining additional commitments from the lenders then party to the credit agreement or new lenders. The term loan facility has a seven-year term and bears interest at either an Adjusted LIBOR or an Adjusted Base Rate, at our option, plus a fixed applicable margin."
+      },
+      {
+        "uid": "aa14b133-97f2-461f-8eae-3855dece1273",
+        "order": 16,
+        "text": "Our cash and cash equivalents in recent years have been favorably affected by our implementation of an equity-based bonus program for our employees, including executives. In connection with that bonus program, in February 2019, we issued 0.3 million freely-tradable shares of our common stock in settlement of bonus awards for the 2018 performance period. We expect to implement a similar equity-based plan for fiscal 2019, but our compensation committee retains discretion to effect payment in cash, stock, or a combination of cash and stock."
+      },
+      {
+        "uid": "0f1e1a7e-dc4e-4f06-95ce-dd623f71ac7d",
+        "order": 17,
+        "text": "Notwithstanding the foregoing, we may need to raise additional capital or incur additional indebtedness to fund strategic initiatives or operating activities, particularly if we continue to pursue acquisitions."
+      },
+      {
+        "uid": "509aa88d-3c76-4fb3-bcff-e52487d847d4",
+        "order": 18,
+        "text": "Our future capital requirements will depend on many factors, including our rate of revenue growth, the expansion of our engineering, sales and marketing activities, the timing and extent of our expansion into new territories, the timing of introductions of new products and enhancements to existing products, the continuing market acceptance of our products and potential material investments in, or acquisitions of, complementary businesses, services or technologies. Additional funds may not be available on terms favorable to us or at all."
+      },
+      {
+        "uid": "1b5d4e3e-d1bf-4074-856b-c51065f838a5",
+        "order": 19,
+        "text": "If we are unable to raise additional funds when needed, we may not be able to sustain our operations or execute our strategic plans."
+      }
+    ],
+    "questions": [
+      {
+        "uid": "daeeefcc-2399-4831-8353-996d9e51f86b",
+        "order": 3,
+        "question": "What is the average Net cash used in investing activities for the year ended December 31, 2019 to 2018?",
+        "answer": 7399,
+        "derivation": "(6,973+7,825) / 2",
+        "answer_type": "arithmetic",
+        "answer_from": "table",
+        "rel_paragraphs": [],
+        "req_comparison": false,
+        "scale": "thousand"
+      }
+    ]
+  },
+  {
+    "table": {
+      "uid": "061794d8-895f-4f38-ba0a-9315e571c6bf",
+      "table": [
+        [
+          "",
+          "",
+          "",
+          "Year Ended December 31,",
+          "",
+          ""
+        ],
+        [
+          "",
+          "2019",
+          "% Change",
+          "2018",
+          "% Change",
+          "2017"
+        ],
+        [
+          "",
+          "",
+          "",
+          "(in thousands, except percentage data)",
+          "",
+          ""
+        ],
+        [
+          "Net revenue",
+          "$711,391",
+          "(7.7)%",
+          "$771,060",
+          "0.4%",
+          "$768,261"
+        ],
+        [
+          "Percentage of net revenue",
+          "71.2%",
+          "",
+          "72.8%",
+          "",
+          "73.9%"
+        ],
+        [
+          "Contribution income",
+          "$67,775",
+          "(29.7)%",
+          "$96,340",
+          "14.9%",
+          "$83,870"
+        ],
+        [
+          "Contribution margin",
+          "9.5%",
+          "",
+          "12.5%",
+          "",
+          "10.9%"
+        ]
+      ]
+    },
+    "paragraphs": [
+      {
+        "uid": "b9522744-b1c8-42a6-996a-c2d28bba7617",
+        "order": 1,
+        "text": "2019 vs 2018"
+      },
+      {
+        "uid": "8af90957-e5e2-42d7-8f82-b62377393813",
+        "order": 2,
+        "text": "Net revenue in Connected Home segment decreased for the year ended December 31, 2019 compared to the prior year. Net revenue from service provider customers fell $27.8 million compared with the prior year. In addition, the North American home WiFi market contracted in fiscal 2019 affecting net revenue from non-service provider customers. The lower revenue was primarily due to declined net revenue of our home wireless, mobile and broadband modem and gateway products. Within home wireless, we experienced declines in net revenue from AC router products, WiFi mesh systems and extenders, partially offset by net revenue generated from the introduction of WiFi 6 routers. On a geographic basis, we experience net revenue declines across all three regions."
+      },
+      {
+        "uid": "a0f39487-9888-40e3-b8ad-4b26284304be",
+        "order": 3,
+        "text": "Contribution income decreased for the year ended December 31, 2019 compared to the prior year, primarily due to lower net revenue and lower gross margin attainment. Contribution margin decreased for the year ended December 31, 2019 compare to the prior year primarily due to higher product acquisition costs resulting from the burden of Section 301 tariffs and inefficiencies associated with commencing manufacturing in new locations, increased channel promotion activities and foreign exchange headwinds due to the strengthening of the U.S. dollar."
+      },
+      {
+        "uid": "ad512bb2-633c-4b07-95d2-6ad63b7e5ee4",
+        "order": 4,
+        "text": "2018 vs 2017"
+      },
+      {
+        "uid": "3ed8b090-e652-4fbd-9f4b-136df2991e91",
+        "order": 5,
+        "text": "2018 vs 2017 Connected Home segment net revenue increased for the year ended December 31, 2018 compared to the prior year. The increase in Connected Home net revenue was primarily due to home wireless and broadband modem and modem gateway products, partially offset by decreased net revenue from mobile products. The growth in home wireless was experienced across both service provider and non-service provider channels, while the increase in broadband and gateway related solely to non-service provider customers. In total, net revenue from service provider customers fell $33.5 million compared to the prior year period. Geographically, net revenue increased in Americas and EMEA, but decreased in APAC."
+      },
+      {
+        "uid": "ee926583-fb13-4ca8-ba13-67651fed224c",
+        "order": 6,
+        "text": "Contribution income increased for the year ended December 31, 2018 compared to the prior year, primarily due to higher net revenue and gross margin attainment, mainly due to favorable product mix and lower warranty expense, partially offset by higher operating expenses as a proportion of net revenue."
+      }
+    ],
+    "questions": [
+      {
+        "uid": "415cba2c-6e34-436a-98b4-454a86518b22",
+        "order": 6,
+        "question": "What was the change in contribution income from 2018 to 2019?",
+        "answer": -28565,
+        "derivation": "$67,775 - $96,340 ",
+        "answer_type": "arithmetic",
+        "answer_from": "table",
+        "rel_paragraphs": [],
+        "req_comparison": false,
+        "scale": "thousand"
+      }
+    ]
+  },
+  {
+    "table": {
+      "uid": "807f645e-a90c-44a1-858a-17ec90b5900b",
+      "table": [
+        [
+          "(In thousands, except per share amounts)",
+          "Years ended December 31,",
+          ""
+        ],
+        [
+          "",
+          "2019",
+          "2018"
+        ],
+        [
+          "BASIC AND DILUTED",
+          "",
+          ""
+        ],
+        [
+          "Weighted average number of common shares outstanding",
+          "8,844",
+          "5,884"
+        ],
+        [
+          "Net loss attributable to Neonode Inc.",
+          "$(5,298)",
+          "$(3,060)"
+        ],
+        [
+          "Net loss per share basic and diluted",
+          "$(0.60)",
+          "$(0.52)"
+        ]
+      ]
+    },
+    "paragraphs": [
+      {
+        "uid": "a000270e-ec4f-410c-b364-c79879b43b04",
+        "order": 1,
+        "text": "14. Net Loss Per Share"
+      },
+      {
+        "uid": "6c0102a8-89a0-4438-a79c-b6666da8b97c",
+        "order": 2,
+        "text": "Basic net loss per common share for the years ended December 31, 2019 and 2018 was computed by dividing the net loss attributable to Neonode Inc. for the relevant period by the weighted average number of shares of common stock outstanding during the year. Diluted loss per common share is computed by dividing net loss attributable to Neonode Inc. for the relevant period by the weighted average number of shares of common stock and common stock equivalents outstanding during the year."
+      },
+      {
+        "uid": "e55f52ef-a8c0-4ac4-9178-c497c5db34eb",
+        "order": 3,
+        "text": "Potential common stock equivalents of approximately 0 and 350,000 outstanding stock warrants, 0 and 11,000 shares issuable upon conversion of preferred stock and 0 and 0 stock options are excluded from the diluted earnings per share calculation for the years ended December 31, 2019 and 2018, respectively, due to their anti-dilutive effect."
+      }
+    ],
+    "questions": [
+      {
+        "uid": "9d7a92aa-db9f-4f79-a5d7-b5efa54ad2b3",
+        "order": 6,
+        "question": "What is the ratio of net loss attributable to Neonode Inc. in 2018 compared to 2019?",
+        "answer": 0.58,
+        "derivation": "3,060/5,298 ",
+        "answer_type": "arithmetic",
+        "answer_from": "table",
+        "rel_paragraphs": [],
+        "req_comparison": false,
+        "scale": ""
+      }
+    ]
+  },
+  {
+    "table": {
+      "uid": "7d7aac7e-bde2-4561-bef2-d167b0cec6c9",
+      "table": [
+        [
+          "",
+          "For the years ended December 31,",
+          ""
+        ],
+        [
+          "",
+          "2018",
+          "2019"
+        ],
+        [
+          "",
+          "$NT (In Thousands)",
+          "$NT (In Thousands)"
+        ],
+        [
+          "Defined benefit obligation at beginning of year",
+          "$(5,671,058)",
+          "$(5,620,509)"
+        ],
+        [
+          "Items recognized as profit or loss:",
+          "",
+          ""
+        ],
+        [
+          "Service cost",
+          "(24,477)",
+          "(21,043)"
+        ],
+        [
+          "Interest cost",
+          "(61,247)",
+          "(51,146)"
+        ],
+        [
+          "Subtotal",
+          "(85,724)",
+          "(72,189)"
+        ],
+        [
+          "Remeasurements recognized in other comprehensive income (loss):",
+          "",
+          ""
+        ],
+        [
+          "Arising from changes in financial assumptions",
+          "(91,350)",
+          "(114,976)"
+        ],
+        [
+          "Experience adjustments",
+          "(5,907)",
+          "180,095"
+        ],
+        [
+          "Subtotal",
+          "(97,257)",
+          "65,119"
+        ],
+        [
+          "Benefits paid",
+          "233,530",
+          "216,510"
+        ]
+      ]
+    },
+    "paragraphs": [
+      {
+        "uid": "baf87780-16f5-4ada-84cb-6fac53630bd5",
+        "order": 1,
+        "text": "The employee pension plan mandated by the Labor Standards Act of the R.O.C. is a defined benefit plan. The pension benefits are disbursed based on the units of service years and average monthly salary prior to retirement according to the Labor Standards Act. Two units per year are awarded for the first 15 years of services while one unit per year is awarded after the completion of the 15th year and the total units will not exceed 45 units."
+      },
+      {
+        "uid": "7dd092c2-b916-4606-97fd-b443f3cc5414",
+        "order": 2,
+        "text": "The Company contributes an amount equivalent to 2% of the employees’ total salaries and wages on a monthly basis to the pension fund deposited with the Bank of Taiwan under the name of a pension fund supervisory committee. The pension fund is managed by the government’s designated authorities and therefore is not included in the Company’s consolidated financial statements. For the years ended December 31, 2017, 2018 and 2019, total pension expenses of NT$80 million, NT$69 million and NT$59 million, respectively, were recognized by the Company."
+      },
+      {
+        "uid": "54a2728b-d650-4b1e-a35c-a54d466e7263",
+        "order": 3,
+        "text": "Movements in present value of defined benefit obligation during the year:"
+      }
+    ],
+    "questions": [
+      {
+        "uid": "e5eb1234-0a3e-45fe-8c39-0be6a82bf1f4",
+        "order": 5,
+        "question": "What is the average interest cost?",
+        "answer": 56196.5,
+        "derivation": "(61,247+51,146) / 2",
+        "answer_type": "arithmetic",
+        "answer_from": "table",
+        "rel_paragraphs": [],
+        "req_comparison": false,
+        "scale": "thousand"
+      }
+    ]
+  },
+  {
+    "table": {
+      "uid": "42adc39b-2122-4760-aa81-ae8c6d25d3d0",
+      "table": [
+        [
+          "",
+          "2017",
+          "2018"
+        ],
+        [
+          "",
+          "(In Thousands)",
+          "(In Thousands)"
+        ],
+        [
+          "Audit Fees (1)",
+          "$3,747",
+          "$4,476"
+        ],
+        [
+          "Audit-Related Fees (2)",
+          "—",
+          "—"
+        ],
+        [
+          "Tax Fees (3)",
+          "—",
+          "—"
+        ],
+        [
+          "All Other Fees (4)",
+          "$3",
+          "$3"
+        ],
+        [
+          "Total Fees",
+          "$3,750",
+          "$4,479"
+        ]
+      ]
+    },
+    "paragraphs": [
+      {
+        "uid": "268c0282-9fed-429e-83ac-10d9f30bde9a",
+        "order": 1,
+        "text": "Fees Paid to the Independent Registered Public Accounting Firm"
+      },
+      {
+        "uid": "c654754e-1d25-430d-93b2-7133cda1c046",
+        "order": 2,
+        "text": "The following table presents fees for professional audit services and other services rendered to our company by KPMG for our fiscal years ended December 31, 2017 and 2018."
+      },
+      {
+        "uid": "44490499-d7b7-49ea-8cad-82e81faf716a",
+        "order": 3,
+        "text": "(1) Audit Fees consist of professional services rendered in connection with the audit of our annual consolidated financial statements, including audited financial statements presented in our Annual Report on Form 10-K for the fiscal years ended December 31, 2017 and 2018 and services that are normally provided by the independent registered public accountants in connection with statutory and regulatory filings or engagements for those fiscal years."
+      },
+      {
+        "uid": "1ff7c6fd-a662-4841-8b70-4d2e40661312",
+        "order": 4,
+        "text": "(2) Audit-Related Fees consist of fees for professional services for assurance and related\nservices that are reasonably related to the performance of the audit or review of our consolidated financial statements and are not reported under “Audit Fees.” These services could include accounting consultations concerning financial accounting and reporting standards, due diligence procedures in connection with acquisition and procedures related to other attestation services."
+      },
+      {
+        "uid": "c6fc83f4-2e68-48db-9710-1640992cb677",
+        "order": 5,
+        "text": "(3) Tax Fees consist of fees for professional services for tax compliance, tax advice and tax planning. These services include consultation on tax matters and assistance regarding federal, state and international tax compliance."
+      },
+      {
+        "uid": "947e99a3-b281-45ad-b80b-a510b2c31380",
+        "order": 6,
+        "text": "(4) All Other Fees consist of license fees for the use of accounting research software."
+      }
+    ],
+    "questions": [
+      {
+        "uid": "353a3096-576b-4d04-9af3-ebb58e27a859",
+        "order": 6,
+        "question": "What is the change of “All Other Fees” from 2017 to 2018?",
+        "answer": 0,
+        "derivation": "3 - 3 ",
+        "answer_type": "arithmetic",
+        "answer_from": "table",
+        "rel_paragraphs": [],
+        "req_comparison": false,
+        "scale": "thousand"
+      }
+    ]
+  }
+]

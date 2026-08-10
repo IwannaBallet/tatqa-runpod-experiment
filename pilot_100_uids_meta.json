@@ -1,0 +1,32 @@
+{
+  "seed": 31,
+  "n_total": 100,
+  "n_from_retry_history": 19,
+  "retry_history_uids": [
+    "12a99674-3d7b-43b8-acce-98a83bd7c70e",
+    "31a78c37b86b0c1ac0dc4732131233e1",
+    "37acdf2a7d4b5dabacfe5376349271ef",
+    "49e5b466-62c9-4cab-8d70-8e9317e7a007",
+    "5a34f560307e440d8b4e9e4333a7efb7",
+    "7a16ae56-dce9-436f-ab17-7638fd5c9f17",
+    "7c2b93f617b17176b5d5fadaba7fe0c7",
+    "803799b7-519c-4ca2-8e72-a76fe69b2e6a",
+    "9c43de49-fcef-4ced-b07d-55fb6fff5f38",
+    "9f000c2e-f928-401a-a3ba-2ef71b2bccf6",
+    "a8306bab-9758-4e8b-be9a-f797a6601422",
+    "cccd20d0-ee77-4d5b-9437-4ee9ce56c27e",
+    "d96471e34f661f8d062757ba3f712cd9",
+    "da0d6d2a-67e5-46ea-be1a-68797ec6b8ed",
+    "e4f21617-1a84-40e4-bdf0-671df88cb862",
+    "e54325bdf2794366d8cb0a710033de38",
+    "f0b2fe06c1b53072f911666f3c4fc564",
+    "f1457678b3b0811d5146ea5033683164",
+    "fc3e0a3854099db17b7dcfc891148259"
+  ],
+  "retry_history_source": [
+    "results\\poc_v3new820_condition3_verifier-4b.jsonl",
+    "results\\poc_v3new820_condition3_verifier-8b.jsonl",
+    "results\\poc_v3new820_condition3_verifier-gpt54mini.jsonl"
+  ],
+  "n_random_fill": 81
+}
