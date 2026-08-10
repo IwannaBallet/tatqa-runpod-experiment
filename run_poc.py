@@ -32,7 +32,7 @@ import time
 from datetime import datetime, timezone
 from pathlib import Path
 
-from openai import OpenAI
+from openai import APITimeoutError, OpenAI
 
 ROOT = Path(__file__).resolve().parent
 sys.path.insert(0, str(ROOT / "TAT-QA"))
@@ -53,6 +53,7 @@ MODELS = {
 }
 
 CODE_TIMEOUT_SEC = 5
+API_TIMEOUT_SEC = 120
 UNICODE_MINUS = "−"
 
 # ---------------------------------------------------------------------------
@@ -448,16 +449,24 @@ def run_code(code: str, used_values: dict):
 # ---------------------------------------------------------------------------
 # LLM calls
 # ---------------------------------------------------------------------------
+class LLMTimeoutError(Exception):
+    """Raised when an Ollama/OpenAI-compatible chat completion exceeds API_TIMEOUT_SEC."""
+
+
 def call_llm(client: OpenAI, model: str, system_prompt: str, user_prompt: str) -> str:
-    resp = client.chat.completions.create(
-        model=model,
-        messages=[
-            {"role": "system", "content": system_prompt},
-            {"role": "user", "content": user_prompt},
-        ],
-        temperature=0,
-        response_format={"type": "json_object"},
-    )
+    try:
+        resp = client.chat.completions.create(
+            model=model,
+            messages=[
+                {"role": "system", "content": system_prompt},
+                {"role": "user", "content": user_prompt},
+            ],
+            temperature=0,
+            response_format={"type": "json_object"},
+            timeout=API_TIMEOUT_SEC,
+        )
+    except APITimeoutError:
+        raise LLMTimeoutError(f"no response after {API_TIMEOUT_SEC}s") from None
     return resp.choices[0].message.content or ""
 
 
@@ -511,7 +520,15 @@ def run_calculator(client, model, table_text, question, feedback=None):
     user = CALCULATOR_USER_TEMPLATE.format(table_as_text=table_text, question=question)
     if feedback:
         user = user + "\n\n" + feedback
-    raw = call_llm(client, model, CALCULATOR_SYSTEM, user)
+    try:
+        raw = call_llm(client, model, CALCULATOR_SYSTEM, user)
+    except LLMTimeoutError as e:
+        return {
+            "used_values": {}, "code": "", "raw_response": "",
+            "code_exec_result": None, "code_exec_error": f"api_timeout: {e}",
+            "parse_error": None, "internal_inconsistency": False, "unused_keys": [],
+            "api_timeout": True,
+        }
     parsed, err = extract_json(raw)
     call = {
         "used_values": {},
@@ -522,6 +539,7 @@ def run_calculator(client, model, table_text, question, feedback=None):
         "parse_error": err,
         "internal_inconsistency": False,
         "unused_keys": [],
+        "api_timeout": False,
     }
     if parsed is None or not isinstance(parsed, dict):
         call["code_exec_error"] = "no valid JSON response: " + (err or "unknown")
@@ -599,12 +617,24 @@ def run_verifier(client, model, table_text, used_values: dict):
         table_as_text=table_text,
         calculator_used_values_json=json.dumps(used_values, ensure_ascii=False),
     )
-    raw = call_llm(client, model, VERIFIER_SYSTEM, user)
+    try:
+        raw = call_llm(client, model, VERIFIER_SYSTEM, user)
+    except LLMTimeoutError as e:
+        # Fail-safe: same as an unparseable response -- treat everything as
+        # unverified, but flag api_timeout so Fail count from timeouts is auditable.
+        return {
+            "verified_values": {}, "mismatches": list(used_values.keys()),
+            "valid_mismatches": list(used_values.keys()),
+            "invalid_mismatch_items": [], "self_consistent_mismatch_items": [],
+            "raw_response": "", "parse_error": f"api_timeout: {e}",
+            "api_timeout": True,
+        }
     parsed, err = extract_json(raw)
     call = {
         "verified_values": {}, "mismatches": [], "valid_mismatches": [],
         "invalid_mismatch_items": [], "self_consistent_mismatch_items": [],
         "raw_response": raw, "parse_error": err,
+        "api_timeout": False,
     }
     if parsed is None or not isinstance(parsed, dict):
         # Fail-safe: can't determine mismatches, so treat everything as unverified
@@ -633,13 +663,26 @@ def run_verifier_literate(client, model, table_text, question, used_values: dict
         calculator_used_values_json=json.dumps(used_values, ensure_ascii=False),
         calculator_code=code,
     )
-    raw = call_llm(client, model, VERIFIER_SYSTEM_LITERATE, user)
+    try:
+        raw = call_llm(client, model, VERIFIER_SYSTEM_LITERATE, user)
+    except LLMTimeoutError as e:
+        # Fail-safe: same as an unparseable response -- treat everything as
+        # unverified, but flag api_timeout so Fail count from timeouts is auditable.
+        return {
+            "verified_values": {}, "value_mismatches": list(used_values.keys()),
+            "valid_mismatches": list(used_values.keys()),
+            "invalid_mismatch_items": [], "self_consistent_mismatch_items": [],
+            "logic_mismatch": True, "logic_mismatch_reason": "api_timeout",
+            "raw_response": "", "parse_error": f"api_timeout: {e}",
+            "api_timeout": True,
+        }
     parsed, err = extract_json(raw)
     call = {
         "verified_values": {}, "value_mismatches": [], "valid_mismatches": [],
         "invalid_mismatch_items": [], "self_consistent_mismatch_items": [],
         "logic_mismatch": False, "logic_mismatch_reason": None,
         "raw_response": raw, "parse_error": err,
+        "api_timeout": False,
     }
     if parsed is None or not isinstance(parsed, dict):
         # Fail-safe: can't determine mismatches, so treat everything as unverified
@@ -720,13 +763,23 @@ def run_condition1(client, model, doc, q):
     t0 = time.perf_counter()
     table_text = format_table(doc["table"])
     user = STANDARD_USER_TEMPLATE.format(table_as_text=table_text, question=q["question"])
-    raw = call_llm(client, model, STANDARD_SYSTEM, user)
-    parsed, err = extract_json(raw)
     rec = build_record(doc, q, 1, model)
+    try:
+        raw = call_llm(client, model, STANDARD_SYSTEM, user)
+    except LLMTimeoutError as e:
+        rec["calculator_call_1"] = {
+            "used_values": {}, "code": "", "raw_response": "",
+            "code_exec_result": None, "code_exec_error": f"api_timeout: {e}",
+            "parse_error": None, "internal_inconsistency": False, "unused_keys": [],
+            "api_timeout": True,
+        }
+        return finalize(rec, t0)
+    parsed, err = extract_json(raw)
     rec["calculator_call_1"] = {
         "used_values": {}, "code": "", "raw_response": raw,
         "code_exec_result": None, "code_exec_error": None, "parse_error": err,
         "internal_inconsistency": False, "unused_keys": [],
+        "api_timeout": False,
     }
     if parsed is not None and isinstance(parsed, dict) and "answer" in parsed:
         rec["predicted_answer"] = parsed["answer"]
@@ -1156,6 +1209,7 @@ def main():
         "n_logic_mismatch_flagged": 0,
     } for m in args.models for c in args.conditions}
     inconsistency_stats = {m: {c: 0 for c in args.conditions} for m in args.models}
+    timeout_stats = {m: {c: 0 for c in args.conditions} for m in args.models}
     file_mode = "a" if args.append else "w"
     needs_shared_calc = any(c in ("2", "3", "3b") for c in args.conditions)
 
@@ -1211,6 +1265,12 @@ def main():
                         calc2_inc = bool(rec.get("calculator_call_2") and rec["calculator_call_2"]["internal_inconsistency"])
                         if calc1_inc or calc2_inc:
                             inconsistency_stats[model][condition] += 1
+
+                    if any(bool(call and call.get("api_timeout")) for call in (
+                        rec.get("calculator_call_1"), rec.get("verifier_call_1"),
+                        rec.get("calculator_call_2"), rec.get("verifier_call_2"),
+                    )):
+                        timeout_stats[model][condition] += 1
 
                     score_record(meters[(model, condition)], rec, q)
 
@@ -1270,6 +1330,7 @@ def main():
             n_total = len(raw)
             n_correct = sum(1 for d in raw if d["em"] == 1.0)
             cond_summary = {"em": em, "n_correct": n_correct, "n_total": n_total}
+            cond_summary["n_api_timeout"] = timeout_stats[model][condition]
             if condition in ("2", "3", "3b"):
                 cond_summary["n_internal_inconsistency"] = inconsistency_stats[model][condition]
             if condition in ("3", "3b"):
