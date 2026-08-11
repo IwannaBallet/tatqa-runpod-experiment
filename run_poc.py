@@ -47,6 +47,7 @@ MODELS = {
     "llama3.2:3b": "llama",
     "qwen3:4b-instruct": "qwen3-4b",
     "qwen3:8b": "qwen3-8b",
+"qwen3:1.7b": "qwen3-1.7b",
 }
 
 CODE_TIMEOUT_SEC = 5
