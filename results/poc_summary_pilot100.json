@@ -1,65 +1,24 @@
 {
-  "run_date": "2026-08-10T06:19:54.606229+00:00",
+  "run_date": "2026-08-10T09:44:51.751563+00:00",
   "n_questions": 100,
   "results": {
-    "qwen3:1.7b": {
-      "condition3b": {
-        "em": 0.59,
-        "n_correct": 59,
-        "n_total": 100,
-        "n_api_timeout": 1,
-        "n_internal_inconsistency": 2,
-        "verifier_precision": 0.1,
-        "verifier_recall": 0.029411764705882353,
-        "n_ambiguous": 13,
-        "automated_not_manually_validated": true,
-        "n_retried": 41,
-        "n_retry_truly_fixed": 0,
-        "n_retry_regressed": 18,
-        "n_retry_verifier_satisfied_but_still_wrong": 4,
-        "n_retry_invalid_mismatch": 0,
-        "avg_latency_seconds": 18.892135192491114,
-        "n_logic_mismatch_flagged": 41
-      }
-    },
-    "qwen3:4b": {
-      "condition3b": {
-        "em": 0.85,
-        "n_correct": 85,
-        "n_total": 100,
-        "n_api_timeout": 0,
-        "n_internal_inconsistency": 0,
-        "verifier_precision": 0.75,
-        "verifier_recall": 0.375,
-        "n_ambiguous": 7,
-        "automated_not_manually_validated": true,
-        "n_retried": 7,
-        "n_retry_truly_fixed": 1,
-        "n_retry_regressed": 1,
-        "n_retry_verifier_satisfied_but_still_wrong": 0,
-        "n_retry_invalid_mismatch": 1,
-        "avg_latency_seconds": 31.407728409953414,
-        "n_logic_mismatch_flagged": 6
-      }
-    },
     "qwen3:8b": {
-      "condition3b": {
-        "em": 0.8,
-        "n_correct": 80,
+      "condition3": {
+        "em": 0.84,
+        "n_correct": 84,
         "n_total": 100,
         "n_api_timeout": 1,
         "n_internal_inconsistency": 0,
-        "verifier_precision": 0.0,
-        "verifier_recall": 0.0,
-        "n_ambiguous": 9,
+        "verifier_precision": 0.5,
+        "verifier_recall": 0.125,
+        "n_ambiguous": 4,
         "automated_not_manually_validated": true,
-        "n_retried": 13,
-        "n_retry_truly_fixed": 1,
-        "n_retry_regressed": 5,
-        "n_retry_verifier_satisfied_but_still_wrong": 2,
-        "n_retry_invalid_mismatch": 0,
-        "avg_latency_seconds": 17.608044263850896,
-        "n_logic_mismatch_flagged": 13
+        "n_retried": 0,
+        "n_retry_truly_fixed": 0,
+        "n_retry_regressed": 0,
+        "n_retry_verifier_satisfied_but_still_wrong": 0,
+        "n_retry_invalid_mismatch": 2,
+        "avg_latency_seconds": 15.412705702278764
       }
     }
   }
