@@ -45,15 +45,12 @@ OLLAMA_BASE_URL = "http://localhost:11434/v1"
 MODELS = {
     "qwen2.5:3b-instruct": "qwen",
     "llama3.2:3b": "llama",
-    "qwen3:1.7b": "qwen3-1.7b",
-    "qwen3:4b": "qwen3-4b",
     "qwen3:4b-instruct": "qwen3-4b",
     "qwen3:8b": "qwen3-8b",
-    "qwen3:32b": "qwen3-32b",
 }
 
 CODE_TIMEOUT_SEC = 5
-API_TIMEOUT_SEC = 120
+API_TIMEOUT_SEC = 90
 UNICODE_MINUS = "−"
 
 # ---------------------------------------------------------------------------
@@ -1190,7 +1187,12 @@ def main():
         sample_docs = sample_docs[: args.limit]
 
     RESULTS_DIR.mkdir(exist_ok=True)
-    client = OpenAI(base_url=OLLAMA_BASE_URL, api_key="ollama")
+    # max_retries=0: the OpenAI SDK's default (2) silently retries on
+    # httpx.TimeoutException using the *same* per-call timeout= budget each time,
+    # so a "single" 90s-timeout call could actually block for up to 3x90s+backoff
+    # before raising (confirmed against the 366s/124s outliers in the RunPod logs).
+    # With max_retries=0, API_TIMEOUT_SEC is a hard per-call ceiling.
+    client = OpenAI(base_url=OLLAMA_BASE_URL, api_key="ollama", max_retries=0)
 
     state = {
         "oracle_stats": {(m, c): {"tp": 0, "fp": 0, "fn": 0, "tn": 0, "n_ambiguous": 0}
