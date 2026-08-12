@@ -101,14 +101,103 @@ def format_text(paragraphs: list) -> str:
     return "\n".join(f"{p.get('order', i + 1)} {p['text']}" for i, p in enumerate(ordered))
 
 
-def build_prompt(doc: dict, question: str) -> str:
-    table_text = format_table(doc["table"]["table"])
-    text_block = format_text(doc.get("paragraphs", []))
+def build_query_block(table_rows, paragraphs, question: str) -> str:
     return (
-        INSTRUCTION_HEADER + table_text
-        + "\n\n### Text\n\n" + text_block
+        INSTRUCTION_HEADER + format_table(table_rows)
+        + "\n\n### Text\n\n" + format_text(paragraphs)
         + "\n\n### Question \n\n" + question
+        + "\n\n### Response\n\n"
     )
+
+
+# ---------------------------------------------------------------------------
+# Few-shot examples -- two arithmetic questions pulled verbatim from TAT-LLM's
+# own stepwise SFT training data (data/sft/stepwise/tatqa/tatqa_dataset_train.json
+# in https://github.com/fengbinzhu/TAT-LLM), included so the model more reliably
+# produces the 5-step table (question type -> evidence -> equation -> answer ->
+# scale) that the Executor post-processing below depends on. Deliberately drawn
+# from the TRAIN split and verified to have zero table/question overlap with
+# poc_sample_v3.json (checked exact question-text and table-content matches) --
+# using a dev-split example risked leaking one of our own 1,000 eval questions
+# into the prompt (an earlier goodwill-impairment dev example we considered
+# turned out to already be one of our eval questions).
+# ---------------------------------------------------------------------------
+FEW_SHOT_EXAMPLES = [
+    {
+        "table": [
+            ["($ in millions except per share amounts)", "", "", ""],
+            ["For the year ended December 31:*", "2019", "2018", "Yr.-to-Yr. Percent Change"],
+            ["Net income as reported", "$ 9,431", "8,728*", "8.1%"],
+            ["Income/(loss) from discontinued operations, net of tax", "(4)", "5", "NM"],
+            ["Income from continuing operations", "$ 9,435", "8,723*", "8.2%"],
+            ["Non-operating adjustments (net of tax)", "", "", ""],
+            ["Acquisition-related charges", "1,343", "649", "107.0"],
+            ["Non-operating retirement-related costs/(income)", "512", "1,248", "(58.9)"],
+            ["U.S. tax reform charge", "146", "2,037", "(92.8)"],
+            ["Operating (non-GAAP) earnings", "$11,436", "$12,657", "(9.6)%"],
+            ["Diluted operating (non-GAAP) earnings per share", "$ 12.81", "$ 13.81", "(7.2)%"],
+        ],
+        "paragraphs": [
+            {"order": 1, "text": "The following table provides the company's operating (non-GAAP) earnings "
+                                  "for 2019 and 2018. See page 46 for additional information."},
+            {"order": 2, "text": "* 2019 results were impacted by Red Hat purchase accounting and "
+                                  "acquisition-related activity."},
+            {"order": 3, "text": "** Includes charges of $2.0 billion in 2018 associated with U.S. tax reform."},
+        ],
+        "question": "What was the increase / (decrease) in Net income from 2018 to 2019?",
+        "response": """| step | output |
+| 1 | Arithmetic |
+| 2 | 8728#9431 |
+| 3 | 9431 - 8728 |
+| 4 | 703 |
+| 5 | million |
+
+The answer is: 703 #### and its corresponding scale is: million""",
+    },
+    {
+        "table": [
+            ["", "Year ended December 31, 2019", "Year ended December 31, 2018", "Year ended December 31, 2017"],
+            ["Income", "55", "47", "30"],
+            ["Expense", "(54)", "(54)", "(52)"],
+            ["Total", "1", "(7)", "(22)"],
+        ],
+        "paragraphs": [
+            {"order": 1, "text": "Interest income (expense), net consisted of the following:"},
+            {"order": 2, "text": "Interest income is related to the cash and cash equivalents held by the "
+                                  "Company. Interest expense recorded in 2019, 2018 and 2017 included "
+                                  "respectively a charge of $39 million, $38 million and $37 million on the "
+                                  "senior unsecured convertible bonds issued in July 2017 and July 2014, of "
+                                  "which respectively $37 million, $36 million and $33 million was a non-cash "
+                                  "interest expense resulting from the accretion of the discount on the "
+                                  "liability component. Net interest includes also charges related to the "
+                                  "banking fees and the sale of trade and other receivables."},
+            {"order": 3, "text": "No borrowing cost was capitalized in 2019, 2018 and 2017. Interest income on "
+                                  "government bonds and floating rate notes classified as available-for-sale "
+                                  "marketable securities amounted to $6 million for the year ended December 31, "
+                                  "2019, $6 million for the year ended December 31, 2018 and $6 million for the "
+                                  "year ended December 31, 2017."},
+        ],
+        "question": "What is the average Income?",
+        "response": """| step | output |
+| 1 | Arithmetic |
+| 2 | 30#47#55 |
+| 3 | ((55 + 47) + 30) / 3 |
+| 4 | 44 |
+| 5 | million |
+
+The answer is: 44 #### and its corresponding scale is: million""",
+    },
+]
+
+FEW_SHOT_BLOCK = "\n\n\n".join(
+    build_query_block(ex["table"], ex["paragraphs"], ex["question"]) + ex["response"]
+    for ex in FEW_SHOT_EXAMPLES
+)
+
+
+def build_prompt(doc: dict, question: str) -> str:
+    query_block = build_query_block(doc["table"]["table"], doc.get("paragraphs", []), question)
+    return FEW_SHOT_BLOCK + "\n\n\n" + query_block
 
 
 # ---------------------------------------------------------------------------
@@ -215,6 +304,9 @@ def main():
     tokenizer = AutoTokenizer.from_pretrained(args.model_dir)
     if tokenizer.pad_token is None:
         tokenizer.pad_token = tokenizer.eos_token
+    # Truncate from the left (drop few-shot content first) so an oversized real
+    # table never costs us the actual question / "### Response" cue at the end.
+    tokenizer.truncation_side = "left"
     model = AutoModelForCausalLM.from_pretrained(
         args.model_dir, torch_dtype=torch.bfloat16, device_map="auto",
     )
