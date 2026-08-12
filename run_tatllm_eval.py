@@ -5,21 +5,38 @@ SOTA-comparison baseline: table + question in, answer out, one model call per
 question -- no Calculator/Verifier, no retry (contrast with run_poc.py's
 Condition 1/2/3/3b pipelines). Run download_tatllm.py first to fetch the model.
 
-Prompt/output format is copied verbatim from the model's own SFT training data
-(data/sft/end_to_end/tatqa/tatqa_dataset_dev.json in
-https://github.com/fengbinzhu/TAT-LLM) -- that is the format the model was
-fine-tuned on, so it is what it expects and reliably reproduces.
+Prompt is TAT-LLM's Step-wise Pipeline format, copied verbatim from the model's own
+SFT training data (data/sft/stepwise/tatqa/tatqa_dataset_dev.json in
+https://github.com/fengbinzhu/TAT-LLM) -- NOT the simpler data/sft/end_to_end
+format. The model card (https://huggingface.co/next-tat/tat-llm-7b-fft) confirms
+this is how it was trained: "crafted through the innovative Step-wise Pipeline
+approach ... embodying three fundamental phases: Extraction, Reasoning, and
+Execution." The model outputs a `| step | output |` table (question type /
+evidence / equation / answer / scale) plus a final "The answer is: ..." sentence.
+
+Output post-processing (the "External Executor" the model card refers to) is a
+verbatim port of `parse_pred_answer` / `analyze_sft_response` / `clean_equation`
+from tat_llm_eval.py in the repo above (dataset='tatqa' branch): for arithmetic
+questions it re-runs the model's own equation (step 3) through eval() rather than
+trusting the model's restated final number (step 4), and for count questions it
+counts the evidence spans (step 2) rather than trusting the model's count. This
+matters because LLMs occasionally state an equation correctly but misstate its
+result. NOT ported: tat_llm_eval.py's `measure_match` scale-tolerant fuzzy number
+matching (compares within 1% and across x100/x100 scale confusions before scoring)
+-- that changes what counts as "correct" beyond just fixing arithmetic slips, and
+run_poc.py's own convention (see its module docstring) is to score with the
+official TAT-QA metric unmodified, so this script does the same for comparability
+with our own Condition 1/2/3/3b results.
 
 Scoring reuses the official TAT-QA metric (TAT-QA/tatqa_metric.py), same
-convention as run_poc.py's score_record: pred_scale is whatever the model itself
-predicts (mapped 'none' -> '' to match the gold scale vocabulary).
+convention as run_poc.py's score_record.
 """
 
 from __future__ import annotations
 
 import argparse
 import json
-import re
+import string
 import sys
 import time
 from datetime import datetime, timezone
@@ -37,36 +54,38 @@ RESULTS_DIR = ROOT / "results"
 DEFAULT_MODEL_DIR = ROOT / "models" / "tat-llm-7b-fft"
 MAX_PROMPT_TOKENS = 4096
 
-# TAT-LLM's own output vocabulary for scale -> TAT-QA gold "scale" field vocabulary.
-SCALE_MAP = {"none": "", "percent": "percent", "thousand": "thousand", "million": "million", "billion": "billion"}
-
 INSTRUCTION_HEADER = """Below is an instruction that describes a question answering task in the finance domain, paired with an input table and its relevant text that provide further context. The given question is relevant to the table and text. Generate an appropriate answer to the given question.
 
 
 
 ### Instruction
 
-Given a table and a list of texts in the following, what is the answer to the question?
+Given a table and a list of texts in the following, answer the question posed using the following five-step process:
 
-Please predict the answer and store it in a variable named `{answer}`. If there are multiple values, separate them using the '#' symbol.
+1. Step 1: Predict the type of question being asked. Store this prediction in the variable `{question_type}`. The value of `{question_type}` can be one of the following:`Single span`, `Multiple spans`, `Count`, or `Arithmetic`.
 
-If the value of the `{answer}` is numerical, predict its scale and store it in a variable named `{scale}`.
+2. Step 2: Extract the relevant strings or numerical values from the provided table or texts. Store these pieces of evidence in the variable `{evidence}`. If there are multiple pieces of evidence, separate them using the '#' symbol.
 
-The value of `{scale}` can be one of the following: `none`, `percent`, `thousand`, `million`, or `billion`. For non-numerical values, set the value of `{scale}` to 'none'.
+3. Step 3: if the `{question_type}` is `Arithmetic`, formulate an equation using values stored in `{evidence}`. Store this equation in the variable `{equation}`. For all other question types, set the value of {equation} to 'N.A.'.
 
+4. Step 4: Predict or calculate the answer based on the question type, evidence and equation. Store it in the variable `{answer}`. If there are multiple values, separate them using the '#' symbol.
 
+5. Step 5: If the value of the `{answer}` is numerical, predict its scale and store it in a variable named `{scale}`. The value of `{scale}` can be one of the following: `none`, `percent`, `thousand`, `million`, or `billion`. For non-numerical values, set the value of `{scale}` to 'none'.
 
-Finally, present the final answer in the format of "The answer is: {answer} #### and its corresponding scale is: {scale}"
+Please organize the results in the following table:
 
+| step | output |
+| 1 | {question_type} |
+| 2 | {evidence} |
+| 3 | {equation} |
+| 4 | {answer} |
+| 5 | {scale} |
 
+Finally, present the final answer in the format: "The answer is: {answer} #### and its corresponding scale is: {scale}"
 
 ### Table
 
 """
-
-ANSWER_RE = re.compile(
-    r"The answer is:\s*(.*?)\s*####\s*and its corresponding scale is:\s*([a-zA-Z]+)", re.DOTALL
-)
 
 
 def format_table_row(cells) -> str:
@@ -87,24 +106,73 @@ def build_prompt(doc: dict, question: str) -> str:
     text_block = format_text(doc.get("paragraphs", []))
     return (
         INSTRUCTION_HEADER + table_text
-        + "\n\n\n\n### Text\n\n" + text_block
-        + "\n\n\n\n### Question \n\n" + question
+        + "\n\n### Text\n\n" + text_block
+        + "\n\n### Question \n\n" + question
     )
 
 
-def parse_prediction(generated: str):
-    """Returns (predicted_answer, predicted_scale). predicted_answer is a string,
-    or a list of strings if the model separated multiple values with '#' (its own
-    multi-span convention). Returns (None, '') if the expected format wasn't found."""
-    m = ANSWER_RE.search(generated)
-    if not m:
-        return None, ""
-    answer_str = m.group(1).strip()
-    scale = SCALE_MAP.get(m.group(2).strip().lower(), "")
-    parts = [p.strip() for p in answer_str.split("#") if p.strip()]
-    if not parts:
-        return None, scale
-    return (parts[0] if len(parts) == 1 else parts), scale
+# ---------------------------------------------------------------------------
+# External Executor -- ported from tat_llm_eval.py (fengbinzhu/TAT-LLM)
+# ---------------------------------------------------------------------------
+def analyze_sft_response(llm_response_text: str) -> dict:
+    """Parses the model's '| step | output |' table into {step_number: output_text}.
+    Verbatim port of tat_llm_eval.py:analyze_sft_response -- any '|'-containing line
+    in the (lower-cased) response becomes a row, keyed by its first column."""
+    res_map = {}
+    for line in llm_response_text.split("\n"):
+        if "|" not in line:
+            continue
+        cols = [c.strip() for c in line.split("|") if c.strip() != ""]
+        if len(cols) < 2:
+            continue
+        res_map[cols[0]] = cols[1]
+    return res_map
+
+
+def clean_equation(equation: str) -> str:
+    """Strips lowercase letters and currency/percent/comma noise so eval() sees a
+    bare arithmetic expression. Verbatim port of tat_llm_eval.py:clean_equation."""
+    strip_chars = set(string.ascii_lowercase) | {"&", "%", ",", "$"}
+    return "".join(c for c in equation if c not in strip_chars)
+
+
+def parse_prediction(generated: str, gold_q: dict, log_uid: str = ""):
+    """Returns (predicted_answer, predicted_scale), ported from tat_llm_eval.py's
+    parse_pred_answer(dataset='tatqa'). predicted_answer is a string, or a list of
+    strings for multi-span gold questions."""
+    text = generated.lower()
+    pred_scale = ""
+    llm_ans_str = text.strip()
+
+    if "the answer is:" in text:
+        llm_ans_str = text.split("the answer is:")[1].strip().replace("</s>", "")
+        arr = llm_ans_str.split("####")
+        llm_ans_str = arr[0].strip()
+        if len(arr) > 1:
+            pred_scale = arr[1].replace("and its corresponding scale is:", "").strip()
+            pred_scale = "" if pred_scale == "none" else pred_scale
+
+    res_map = analyze_sft_response(text)
+    question_type = res_map.get("1")
+    try:
+        if question_type == "arithmetic" and "3" in res_map:
+            llm_ans_str = str(round(eval(clean_equation(res_map["3"])), 4))  # noqa: S307
+        elif question_type == "count" and "2" in res_map:
+            llm_ans_str = str(len(res_map["2"].strip().split("#")))
+        elif question_type == "multiple spans" and "2" in res_map:
+            llm_ans_str = res_map["2"].strip()
+        elif question_type == "single span" and "2" in res_map:
+            llm_ans_str = res_map["2"].strip()
+    except Exception as e:
+        print(f"[executor] equation eval failed for uid={log_uid}: {e}", file=sys.stderr)
+
+    if not llm_ans_str:
+        return None, pred_scale
+
+    if gold_q.get("answer_type") == "multi-span":
+        parts = [p.strip() for p in llm_ans_str.split("#") if p.strip()]
+        return (parts or None), pred_scale
+    return llm_ans_str, pred_scale
 
 
 def score_record(meter: TaTQAEmAndF1, rec: dict, gold_q: dict):
@@ -120,7 +188,8 @@ def main():
     parser.add_argument("--limit", type=int, default=None, help="limit number of questions (smoke test)")
     parser.add_argument("--start", type=int, default=0, help="slice start index (for chunked/resumed runs)")
     parser.add_argument("--end", type=int, default=None, help="slice end index (for chunked/resumed runs)")
-    parser.add_argument("--max-new-tokens", type=int, default=128)
+    parser.add_argument("--max-new-tokens", type=int, default=256,
+                         help="stepwise output (5-row table + summary sentence) needs more headroom than a bare answer")
     parser.add_argument("--tag", default="", help="suffix appended to output filenames")
     parser.add_argument("--dry-run", action="store_true",
                          help="print the first 3 prompts and exit, skip loading the model")
@@ -174,7 +243,7 @@ def main():
                 )
             generated = tokenizer.decode(out_ids[0][inputs["input_ids"].shape[1]:], skip_special_tokens=True)
 
-            predicted_answer, predicted_scale = parse_prediction(generated)
+            predicted_answer, predicted_scale = parse_prediction(generated, q, log_uid=q["uid"])
             rec = {
                 "uid": q["uid"],
                 "table_uid": doc["table"]["uid"],

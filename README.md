@@ -16,7 +16,13 @@
 - `download_tatllm.py` — TAT-LLM 7B(next-tat/tat-llm-7b-fft, SOTA 비교용) 모델을
   Hugging Face에서 다운로드
 - `run_tatllm_eval.py` — TAT-LLM 7B를 poc_sample_v3.json(1,000문항)에 단일 호출로
-  실행하고(재시도/Calculator/Verifier 구조 없음) tatqa_metric.py로 EM/F1 채점
+  실행하고(재시도/Calculator/Verifier 구조 없음) tatqa_metric.py로 EM/F1 채점.
+  프롬프트는 원 저장소(github.com/fengbinzhu/TAT-LLM)의 Step-wise Pipeline 형식
+  (질문유형/근거/수식/답/scale 5단계 표) 그대로이며, 후처리(Executor)도 원
+  저장소 tat_llm_eval.py의 parse_pred_answer 로직을 그대로 이식함 — 산술 문항은
+  모델이 마지막에 다시 말한 숫자를 믿지 않고 모델이 3단계에서 세운 수식을
+  eval()로 재계산해서 최종 답으로 씀 (모델이 수식은 맞게 세우고 답만 잘못
+  옮겨적는 경우를 교정하기 위함)
 
 ## 실행 예시
 ```bash
