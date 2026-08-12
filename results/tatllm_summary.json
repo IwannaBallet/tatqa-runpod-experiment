@@ -1,0 +1,8 @@
+{
+  "model_dir": "/workspace/tatqa-runpod-experiment/models/tat-llm-7b-fft",
+  "n": 1000,
+  "em": 0.775,
+  "f1": 0.775,
+  "scale_em": 0.884,
+  "op_em": 0.0
+}
