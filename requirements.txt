@@ -2,3 +2,7 @@ openai>=1.0
 pandas
 numpy
 scipy
+torch
+transformers
+accelerate
+huggingface_hub

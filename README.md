@@ -13,6 +13,10 @@
 - `TAT-QA/` — `tatqa_metric.py`, `tatqa_utils.py` 등 평가 유틸리티
 - `filtered_tatqa/` — few-shot 예시
 - `requirements.txt` — 필요 Python 패키지
+- `download_tatllm.py` — TAT-LLM 7B(next-tat/tat-llm-7b-fft, SOTA 비교용) 모델을
+  Hugging Face에서 다운로드
+- `run_tatllm_eval.py` — TAT-LLM 7B를 poc_sample_v3.json(1,000문항)에 단일 호출로
+  실행하고(재시도/Calculator/Verifier 구조 없음) tatqa_metric.py로 EM/F1 채점
 
 ## 실행 예시
 ```bash
@@ -21,3 +25,12 @@ python run_poc.py --model qwen3:4b --condition 3b --data pilot_100_uids.json
 python run_poc.py --model qwen3:8b --condition 3b --data pilot_100_uids.json
 ```
 (정확한 CLI 인자명은 `run_poc.py`의 argparse 정의를 확인 후 사용할 것)
+
+## TAT-LLM 7B (SOTA 비교) 실행 예시
+```bash
+python download_tatllm.py                      # models/tat-llm-7b-fft 로 다운로드
+python run_tatllm_eval.py --limit 5             # 스모크 테스트
+python run_tatllm_eval.py                       # 전체 1,000문항 실행
+```
+결과: `results/tatllm_eval.jsonl`(문항별 원문 출력/예측/정오답),
+`results/tatllm_summary.json`(EM/F1 집계).
