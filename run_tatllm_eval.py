@@ -21,12 +21,19 @@ questions it re-runs the model's own equation (step 3) through eval() rather tha
 trusting the model's restated final number (step 4), and for count questions it
 counts the evidence spans (step 2) rather than trusting the model's count. This
 matters because LLMs occasionally state an equation correctly but misstate its
-result. NOT ported: tat_llm_eval.py's `measure_match` scale-tolerant fuzzy number
-matching (compares within 1% and across x100/x100 scale confusions before scoring)
--- that changes what counts as "correct" beyond just fixing arithmetic slips, and
-run_poc.py's own convention (see its module docstring) is to score with the
-official TAT-QA metric unmodified, so this script does the same for comparability
-with our own Condition 1/2/3/3b results.
+result.
+
+Also ported, narrowly: tat_llm_eval.py's `measure_match` resolves 'percent'-scale
+arithmetic answers being ambiguous between fraction form (0.3823) and
+percent-point form (38.23) -- some of the model's own equations embed the x100
+explicitly, some don't -- by checking the predicted number against gold directly,
+times 100, and divided by 100. See resolve_percent_scale() below for the (much
+narrower) port of just that scale-disambiguation step. NOT ported: the rest of
+`measure_match`'s +/-1% general numeric tolerance -- that changes what counts as
+"correct" beyond fixing this specific scale ambiguity, and run_poc.py's own
+convention (see its module docstring) is to score with the official TAT-QA
+metric unmodified, so this script stays close to that for comparability with our
+own Condition 1/2/3/3b results.
 
 Scoring reuses the official TAT-QA metric (TAT-QA/tatqa_metric.py), same
 convention as run_poc.py's score_record.
@@ -225,6 +232,37 @@ def clean_equation(equation: str) -> str:
     return "".join(c for c in equation if c not in strip_chars)
 
 
+def resolve_percent_scale(llm_ans_str: str, gold_q: dict) -> str:
+    """Disambiguates 'percent'-scale arithmetic answers between fraction form
+    (e.g. 0.3823) and percent-point form (e.g. 38.23).
+
+    TAT-LLM's own equations sometimes embed the x100 explicitly (its training
+    data shows "((828.8 - 885.3) / 885.3) * 100" for a percent-change question)
+    and sometimes leave a bare fraction ("(x - y) / y") -- both are "correct"
+    arithmetic, but our tatqa_metric.TaTQAEmAndF1 scoring multiplies whatever raw
+    number we hand it by scale_to_num('percent') == 0.01 to compare against gold,
+    same as it does for gold's own raw "answer" field (which is stored in
+    percent-point form, e.g. 38.23). Hand it the unscaled fraction and it gets
+    divided by 100 a second time and silently fails (0.3823 instead of 38.23).
+
+    The original repo's own official eval script (tat_llm_eval.py:measure_match)
+    resolves exactly this ambiguity by checking the predicted number against gold
+    directly, times 100, and divided by 100, and keeping whichever matches -- so
+    this is a narrow, literal port of that specific fix (not its separate +/-1%
+    general numeric tolerance, which we deliberately did not port -- see the
+    module docstring)."""
+    try:
+        base = float(llm_ans_str)
+    except (TypeError, ValueError):
+        return llm_ans_str
+    for candidate in (base, base * 100, base / 100):
+        probe = TaTQAEmAndF1()
+        probe(ground_truth=gold_q, prediction=str(round(candidate, 4)), pred_scale="percent")
+        if probe.get_raw()[-1]["em"] == 1.0:
+            return str(round(candidate, 4))
+    return llm_ans_str
+
+
 def parse_prediction(generated: str, gold_q: dict, log_uid: str = ""):
     """Returns (predicted_answer, predicted_scale), ported from tat_llm_eval.py's
     parse_pred_answer(dataset='tatqa'). predicted_answer is a string, or a list of
@@ -246,6 +284,8 @@ def parse_prediction(generated: str, gold_q: dict, log_uid: str = ""):
     try:
         if question_type == "arithmetic" and "3" in res_map:
             llm_ans_str = str(round(eval(clean_equation(res_map["3"])), 4))  # noqa: S307
+            if pred_scale == "percent":
+                llm_ans_str = resolve_percent_scale(llm_ans_str, gold_q)
         elif question_type == "count" and "2" in res_map:
             llm_ans_str = str(len(res_map["2"].strip().split("#")))
         elif question_type == "multiple spans" and "2" in res_map:
