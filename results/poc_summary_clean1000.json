@@ -3,6 +3,14 @@
   "n_questions": 1000,
   "results": {
     "qwen3:8b": {
+      "condition1": {
+        "em": 0.652,
+        "n_correct": 652,
+        "n_total": 1000,
+        "n_api_timeout": 154,
+        "avg_latency_seconds": 43.7965853961001,
+        "source_note": "results/poc_qwen3-8b_condition1_v6.jsonl(180) + tatqa-runpod-experiment/results/poc_qwen3-8b_condition1_8b_naive_missing820.jsonl(820), uid 합집합 1000 커버, 중복 없음"
+      },
       "condition3": {
         "em": 0.873,
         "n_correct": 873,
